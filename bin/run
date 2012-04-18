@@ -1,6 +1,6 @@
 require 'rubygems'
 require './lib/audit_tentacles'
 
-crawler = Crawler.new('http://www.tki.org.nz')
+crawler = Crawler.new(ARGV[0])
 
 crawler.crawl
