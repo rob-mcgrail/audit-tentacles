@@ -32,4 +32,4 @@ Options are located in @./options.rb@.
 
 Additional configuration may be necessary for appropirate slurping out of file paths. This can be altered in @./lib/audit_tentacles/slurp.rb.@. In this class you can see exclusions for certain url paths and filetypes etc. Adjust to suit your requirements. This is a messy class.
 
-A TKI specific cookie-grabbing function (SSOAuth.get_cookies) passes a hash of cookies in to the crawler via a Mechanize action that clicks the first form submission button it sees. This wont be desirable behaviour is many cases :D. Disable by removing @:cookies => SSOAuth.get_cookies(@site)@ from the options hash in @./lib/audit_tentacles/crawler.rb@.
+A TKI specific cookie-grabbing function (SSOAuth.get_cookies) passes a hash of cookies in to the crawler via a Mechanize action that clicks the first form submission button it sees. This wont be desirable behaviour is many cases :D. Disable by removing <code>:cookies => SSOAuth.get_cookies(site)</code> from the options hash in @./lib/audit_tentacles/crawler.rb@.
