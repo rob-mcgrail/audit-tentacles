@@ -1,4 +1,4 @@
-*A web crawling app that seeks out media files, and stores their location, context and MD5 hash in easy-to-query redis sets.*
+A web crawling app that seeks out media files, and stores their location, context and MD5 hash in easy-to-query redis sets. Data can be pulled out 'by checksum', giving URI locations and context pages for specific files. Data can also be viewed by size, URI, and by site. Files that appear on multiple pages, or accross multiple sites can also be easily singled out.
 
 h3. The basics
 
@@ -18,4 +18,18 @@ h3. The basics
 
 4. CRAWL
 
-@$ bundle exec ruby bin/run@
+@$ bundle exec ruby bin/run http://site.com@
+
+h3. Options
+
+Options are located in @./options.rb@.
+
+@$options.datastore@ : Takes an integer representing the desired Redis db.
+
+@$options.global_prefix@ : A string placed at the start of all keys, to avoid collisions if your app shares a db with others.
+
+@$options.page_delay@ : Delay between pages when crawling sites.
+
+Additional configuration may be necessary for appropirate slurping out of file paths. This can be altered in @./lib/audit_tentacles/slurp.rb.@. In this class you can see exclusions for certain url paths and filetypes etc. Adjust to suit your requirements. This is a messy class.
+
+A TKI specific cookie-grabbing function (SSOAuth.get_cookies) passes a hash of cookies in to the crawler via a Mechanize action that clicks the first form submission button it sees. This wont be desirable behaviour is many cases :D. Disable by removing @:cookies => SSOAuth.get_cookies(@site)@ from the options hash in @./lib/audit_tentacles/crawler.rb@.
