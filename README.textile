@@ -1,6 +1,4 @@
-h2.
-
-A web crawling app that seeks out media files, and stores their location, context and MD5 hash in easy-to-query redis sets.
+*A web crawling app that seeks out media files, and stores their location, context and MD5 hash in easy-to-query redis sets.*
 
 h3. The basics
 
