@@ -1,0 +1,17 @@
+1. Sort out your environment
+
+@$ gem install bundler@
+
+@$ bundle install@
+
+2. Make sure it passes its tests
+
+@$ rake@
+
+3. Clean out your redis...
+
+@$ bundle exec ruby bin/FLUSH@
+
+4. CRAWL
+
+@$ bundle exec ruby bin/run@
