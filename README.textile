@@ -1,3 +1,7 @@
+A ruby web crawling app that seeks out media files, and stores their location, context and MD5 hash in easy-to-query redis sets.
+
+h2. The basics
+
 1. Sort out your environment
 
 @$ gem install bundler@
