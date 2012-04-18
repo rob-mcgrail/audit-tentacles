@@ -3,6 +3,8 @@ require 'bundler/setup'
 
 Bundler.require(:default)
 
+$term = HighLine.new
+
 require './options'
 require './lib/audit_tentacles/redis'
 require './lib/audit_tentacles/sso_auth'
