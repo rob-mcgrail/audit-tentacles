@@ -1,4 +1,4 @@
-require './lib/tki-linkcheck'
+require './lib/audit_tentacles'
 Bundler.require(:test)
 
 require 'minitest/autorun'

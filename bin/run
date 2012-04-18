@@ -1,7 +1,4 @@
 require 'rubygems'
 require './lib/audit_tentacles'
 
-
-site = Sites.create :location => ARGV[0]
-
-Crawler.new(site).crawl
+puts 'hello'
