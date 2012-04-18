@@ -22,13 +22,12 @@ class TestMedia < MiniTest::Unit::TestCase
   def test_item_saved
     sum = Media.log('http://example.com/media/thing.jpg', 'http://example.com/page')
     assert_equal sum, $redis.smembers("#{$options.global_prefix}:sums").first
-    assert_equal 'http://example.com/media/thing.jpg', $redis.smembers("#{$options.global_prefix}:uris").first
-    assert_equal 'http://example.com/page', $redis.smembers("#{$options.global_prefix}:contexts").first
-
-    h = $redis.hgetall("#{$options.global_prefix}:#{sum}")
-    assert_equal '444808', h['size']
-    assert_equal 'http://example.com/media/thing.jpg', h['uri']
-    assert_equal 'http://example.com/page', h['context']
+    uri = $redis.smembers("#{$options.global_prefix}:uris").first
+    assert_equal 'http://example.com/media/thing.jpg', uri
+    assert_equal sum, $redis.get("#{$options.global_prefix}:#{uri}:sum")
+    assert_equal 'http://example.com/page', $redis.smembers("#{$options.global_prefix}:#{sum}:contexts").first
+    assert_equal 'http://example.com/media/thing.jpg', $redis.smembers("#{$options.global_prefix}:#{sum}:uris").first
+    assert_equal '444808', $redis.get("#{$options.global_prefix}:#{sum}:size")
   end
 
 
