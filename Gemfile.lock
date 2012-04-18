@@ -9,6 +9,7 @@ GEM
     crack (0.3.1)
     domain_name (0.5.3)
       unf (~> 0.0.3)
+    highline (1.6.11)
     mechanize (2.3)
       domain_name (~> 0.5, >= 0.5.1)
       mime-types (~> 1.17, >= 1.17.2)
@@ -45,6 +46,7 @@ PLATFORMS
 DEPENDENCIES
   SystemTimer
   anemone
+  highline
   mechanize
   minitest
   minitest-colorize
