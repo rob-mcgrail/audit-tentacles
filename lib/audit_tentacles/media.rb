@@ -1,4 +1,8 @@
 class Media
+  # Ensure we get tempfiles rather than stringio objects
+  OpenURI::Buffer.send :remove_const, 'StringMax' if OpenURI::Buffer.const_defined?('StringMax')
+  OpenURI::Buffer.const_set 'StringMax', 0
+
   def self.log(uri, context)
     unless $redis.sismember "#{$options.global_prefix}:uris", uri
       info = file_info(uri)
@@ -22,6 +26,7 @@ class Media
     file = get_file(uri)
     info[:size] = file.size
     info[:sum] = hash_file(file)
+    file.unlink
     info
   end
 

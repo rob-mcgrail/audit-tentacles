@@ -21,7 +21,7 @@ class Crawler
     Anemone.crawl(@site, opts) do |anemone|
       anemone.skip_links_like /%23/ # anemone was confused by links like: /News#123
       anemone.on_every_page do |page|
-        links = slurp(page) if page.doc
+        links = slurp(page.doc) if page.doc
         if links
           links.each do |link|
             begin
