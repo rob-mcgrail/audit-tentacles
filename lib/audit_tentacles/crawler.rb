@@ -27,7 +27,8 @@ class Crawler
             begin
               puts $term.color("Logging #{link}", :green)
               Media.log link, page.url
-            rescue Timeout::Error, Errno::ECONNRESET, SocketError, URI::InvalidURIError => e
+            rescue Timeout::Error, Errno::ECONNRESET, SocketError,
+                   URI::InvalidURIError, OpenURI::HTTPError => e
               puts $term.color(e.message, :red)
             end
           end
@@ -37,9 +38,7 @@ class Crawler
     post_cleanup
   end
 
-
   private
-
 
   def pre_cleanup
   end

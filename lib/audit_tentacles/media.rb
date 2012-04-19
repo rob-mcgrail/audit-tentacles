@@ -11,13 +11,11 @@ class Media
         $redis.sadd "#{$options.global_prefix}:uris", uri
         $redis.set "#{$options.global_prefix}:#{uri}:sum", info[:sum]
       end
-      info[:sum]
+      info[:sum] # Return the sum.
     end
   end
 
-
   private
-
 
   def self.file_info(uri)
     info = {}
@@ -29,8 +27,8 @@ class Media
 
 
   def self.hash_file(file)
-    print $term.color("Hashing...", :blue)
     require 'digest/md5'
+    print $term.color("Hashing...", :blue)
     Digest::MD5.hexdigest(file.read)
   end
 
@@ -39,6 +37,8 @@ class Media
     require 'uri'
     require 'open-uri'
     uri = URI.escape(uri)
+    # None of the URI.escape regexes
+    # hit the eZPublish sweet spot, so...
     uri.gsub!('[', '%5B')
     uri.gsub!(']', '%5D')
     open(uri)
