@@ -10,7 +10,8 @@ module Slurp
     if images
       images = get_srcs(images)
     end
-    links + images
+    videos = get_videos(page.doc.to_s)
+    links + images + videos
   end
 
 
@@ -19,6 +20,18 @@ module Slurp
     srcs.delete_if { |ref| ref !~  FILES_REGEX }
     srcs.delete_if { |src| src =~ /\/design\// }
     clean_and_absolute srcs
+  end
+
+
+  def get_videos(str)
+    matches = /file=(.[^&|"]+)/i.match(str)
+    if matches
+      matches = matches.to_a
+      matches.delete_if =~ /\/transcript\//
+      clean_and_absolute matches
+    else
+      []
+    end
   end
 
 
