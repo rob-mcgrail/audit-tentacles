@@ -8,9 +8,9 @@ class TestMedia < MiniTest::Unit::TestCase
   def setup
     $redis = MockRedis.new
     img = File.open('./test/mocks/cat1.jpg')
-    stub_request(:get, "example.com/media/thing.jpg").to_return({:status => 200, :body => img})
+    stub_request(:get, "http://example.com/media/thing.jpg").to_return({:status => 200, :body => img})
     img = File.open('./test/mocks/cat2.jpg')
-    stub_request(:get, "example.com/media/another.jpg").to_return({:status => 200, :body => img})
+    stub_request(:get, "http://example.com/media/another.jpg").to_return({:status => 200, :body => img})
   end
 
 
@@ -35,5 +35,22 @@ class TestMedia < MiniTest::Unit::TestCase
     sum1 = Media.log('http://example.com/media/thing.jpg', 'http://example.com/page')
     sum2 = Media.log('http://example.com/media/another.jpg', 'http://example.com/page')
     assert_equal sum1, sum2
+  end
+
+
+  def test_flush_kills_all_keys
+    sum1 = Media.log('http://example.com/media/thing.jpg', 'http://example.com/page')
+    sum2 = Media.log('http://example.com/media/another.jpg', 'http://example.com/page')
+    Media.flush
+    refute $redis.exists("#{$options.global_prefix}:sums")
+    refute $redis.exists("#{$options.global_prefix}:uris")
+    refute $redis.get("#{$options.global_prefix}:http://example.com/media/thing.jpg:sum")
+    refute $redis.get("#{$options.global_prefix}:http://example.com/media/another.jpg:sum")
+    refute $redis.exists("#{$options.global_prefix}:#{sum1}:contexts")
+    refute $redis.exists("#{$options.global_prefix}:#{sum2}:contexts")
+    refute $redis.exists("#{$options.global_prefix}:#{sum1}:uris")
+    refute $redis.exists("#{$options.global_prefix}:#{sum2}:uris")
+    refute $redis.exists("#{$options.global_prefix}:#{sum1}:size")
+    refute $redis.exists("#{$options.global_prefix}:#{sum2}:size")
   end
 end

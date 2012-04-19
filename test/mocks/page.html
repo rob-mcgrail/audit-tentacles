@@ -1,0 +1,75 @@
+<html>
+<head>
+</head>
+<body>
+<img src="/image1.jpg">
+<img src="http://example.com/image2.jpg">
+<img src="http://somesite.com/image3.jpg">
+<img src="/image1.png">
+<img src="http://example.com/image2.png">
+<img src="http://somesite.com/image3.png">
+<a href="/thing">
+<a href="http://example.com/thing">
+<a href="/thing/thing1.pdf">
+<a href="http://example.com/thing/thing2.pdf">
+<a href="/thing/thing1.zip">
+<a href="http://example.com/thing/thing2.zip">
+<a href="http://somesite.com/thing/thing3.zip">
+<script type="text/javascript">
+	<!--
+	$(document).ready(function() {
+		jwplayer('video-content').setup({
+			'flashplayer': '/player.swf',
+			'id': 'videoContent',
+			'width': '512',
+			'height': '314',
+			'file': 'http://example.com/content/Video1.flv',
+			'image':'http://example.com/video/preview/1218/10971',
+			'controlbar': 'bottom',
+			'plugins': 'captions-1',
+			'captions.file': 'http://example.com/10971',
+			dock: 'false'
+		});
+		$(function() {
+			$('.dialog-box').dialog({
+				autoOpen: false,
+				modal: true,
+				height: 105,
+				width: 310
+			});
+
+			$('.dialog').click(function() {
+				if($(this).attr('href') != "undefine")
+					$($(this).attr('href')).dialog('open');
+				return false;
+			});
+		});
+
+		$(function(){
+			// Tabs
+			$('.tab-title').hide();
+			$('#tabs').tabs();
+		});
+		});
+	});
+	-->
+</script>
+<script type="text/javascript">
+	<!--
+			function setEmbedCode(e) {
+				/*$("#embed-code-content").val(jQuery.trim($("#video-main-container").html()));*/
+			}
+
+			var flashvars = false;
+
+			var params = {
+			  allowfullscreen: "true"
+			  ,allowscriptaccess: "always"
+			  ,wmode: "transparent"
+			  ,flashvars: "file=http://example.com/content/Video2.flv&type=video&image=http://pasifika.tki.org.nz/video/preview/222/1169&captions.file=http://example.com/video/transcript/222/1169&plugins=captions-1"
+			};
+
+	-->
+</script>
+</body>
+</html>
