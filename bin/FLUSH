@@ -1,7 +1,7 @@
 require 'rubygems'
 require './lib/audit_tentacles'
 
-puts $term.color("Are you sure? This will flush ALL your data out...", :orange)
+puts $term.color("Are you sure? This will flush ALL your data out...", :red)
 
 if $stdin.gets.chomp.upcase == 'Y'
   Media.flush
