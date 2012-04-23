@@ -19,7 +19,7 @@ class Crawler
     }
     pre_cleanup
     Anemone.crawl(@site, opts) do |anemone|
-      anemone.skip_links_like /%23/ # anemone was confused by links like: /News#123
+      anemone.skip_links_like(/%23/, /\/r\//, /\/e\//, /\/m\//)
       anemone.on_every_page do |page|
         links = slurp(page.doc) if page.doc
         if links
