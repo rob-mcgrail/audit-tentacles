@@ -6,6 +6,7 @@ gem "SystemTimer", :platforms => :mri_18
 gem "trollop"
 gem "mechanize"
 gem "highline"
+gem "fastercsv"
 
 group :test do
   gem "minitest", :platforms => :mri_18

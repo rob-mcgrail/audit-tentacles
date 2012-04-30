@@ -9,6 +9,7 @@ GEM
     crack (0.3.1)
     domain_name (0.5.3)
       unf (~> 0.0.3)
+    fastercsv (1.5.4)
     highline (1.6.11)
     mechanize (2.3)
       domain_name (~> 0.5, >= 0.5.1)
@@ -46,6 +47,7 @@ PLATFORMS
 DEPENDENCIES
   SystemTimer
   anemone
+  fastercsv
   highline
   mechanize
   minitest
