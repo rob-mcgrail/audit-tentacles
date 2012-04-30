@@ -16,17 +16,38 @@ class Output
   end
 
 
-
-  def hashes_with_sizes_and_all_locations
+  def basic
     FasterCSV.open(@file_path, "w") do |csv|
-      csv << ['Hash', 'Bytes', 'Example location']
-      $redis.smembers("#{$options.global_prefix}:sums").each do |k|
-        size = $redis.get "#{$options.global_prefix}:#{k}:size"
-        locations = $redis.smembers "#{$options.global_prefix}:#{k}:uris"
-        locations.each do |location|
-          csv << [k, size, location]
+      csv << ['Site', 'Bytes', 'Type', 'Location', 'URI', 'MD5']
+      $redis.smembers("#{$options.global_prefix}:uris").each do |k|
+        sum = $redis.get "#{$options.global_prefix}:#{k}:sum"
+        size = $redis.get "#{$options.global_prefix}:#{sum}:size"
+        type = get_type(k)
+        contexts = $redis.smembers "#{$options.global_prefix}:#{sum}:contexts"
+        contexts.each do |context|
+          site = get_site(context)
+          csv << [site, size, type, context, k, sum]
         end
       end
     end
+  end
+
+
+  def get_type(uri)
+    type = /\.(\w+)$/.match(uri)
+    type = type[1] if type
+    unless type
+      type = 'flv'
+    end
+    type.downcase
+  end
+
+
+  def get_site(uri)
+    uri.gsub!('-', '_')
+    site = /^http:\/\/(\w+(\.\w+)?)\.tki\.org\.nz/.match(uri)
+    site = site[1] if site
+    site = 'portal' if site == 'www'
+    site.downcase
   end
 end

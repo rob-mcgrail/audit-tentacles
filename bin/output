@@ -1,10 +1,7 @@
 require 'rubygems'
 require './lib/audit_tentacles'
 
-o = Output.new('hashes_with_sizes.csv')
-o.hashes_with_sizes
-
-o = Output.new('hashes_with_sizes_all_locations.csv')
-o.hashes_with_sizes_and_all_locations
+o = Output.new('audit.csv')
+o.basic
 
 puts "Files are in your home directory..."
