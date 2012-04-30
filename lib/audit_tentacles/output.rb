@@ -14,4 +14,19 @@ class Output
       end
     end
   end
+
+
+
+  def hashes_with_sizes_and_all_locations
+    FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Hash', 'Bytes', 'Example location']
+      $redis.smembers("#{$options.global_prefix}:sums").each do |k|
+        size = $redis.get "#{$options.global_prefix}:#{k}:size"
+        locations = $redis.smembers "#{$options.global_prefix}:#{k}:uris"
+        locations.each do |location|
+          csv << [k, size, location]
+        end
+      end
+    end
+  end
 end
