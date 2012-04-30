@@ -1,6 +1,6 @@
 class Output
   def initialize(file_path)
-    @file_path = File.join(File.dirname(__FILE__), file_path)
+    @file_path = File.join(File.expand_path('~/'), file_path)
   end
 
 
