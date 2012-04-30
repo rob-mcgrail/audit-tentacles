@@ -1,0 +1,67 @@
+require 'rubygems'
+require './lib/audit_tentacles'
+
+#      "http://www.tki.org.nz",
+#      "http://artsonline.tki.org.nz",
+#      "http://alternativeeducation.tki.org.nz",
+#      "http://assessment.tki.org.nz",
+#      "http://dtg.tki.org.nz",
+#      "http://e-asttle.tki.org.nz",
+#      "http://education-for-enterprise.tki.org.nz",
+#      "http://efs.tki.org.nz",
+#      "http://elearningasinquiry.tki.org.nz",
+#      "http://englishonline.tki.org.nz",  #
+
+#"http://eotc.tki.org.nz",
+#      "http://esolonline.tki.org.nz",
+#      "http://gifted.tki.org.nz",
+#      "http://kohingarauemi.tki.org.nz",
+#      "http://healthylifestyles.tki.org.nz",
+#      "http://hekakano.tki.org.nz",
+#      "http://hereoora.tki.org.nz",
+#      "http://hoatuhomai.tki.org.nz",
+#      "http://hps.tki.org.nz",
+#      "http://home-schoolpartnerships.tki.org.nz",
+#      "http://ict-helpdesk.tki.org.nz",
+#      "http://kiamau.tki.org.nz",
+#      "http://language-immersion.tki.org.nz",
+#      "http://leap.tki.org.nz",
+#      "http://learning-languages.tki.org.nz",
+#      "http://learning-languages-guides.tki.org.nz",
+#      "http://learning-languages-with-icts.tki.org.nz",
+#      "http://literacyonline.tki.org.nz",
+#      "http://literacyprogressions.tki.org.nz",
+#      "http://media-studies.tki.org.nz",
+#      "http://matepouako.tki.org.nz",
+#      "http://napp.tki.org.nz",
+#      "http://ncea.tki.org.nz",
+#      "http://nzcurriculum.tki.org.nz",
+#      "http://nzsl.tki.org.nz",
+#      "http://pasifika.tki.org.nz",
+#      "http://putaiao.tki.org.nz",
+#      "http://rtlb.tki.org.nz",
+#      "http://scienceonline.tki.org.nz",
+#      "http://secondary.tki.org.nz",
+#      "http://seniorsecondary.tki.org.nz",
+#      "http://softwareforlearning.tki.org.nz", #
+
+a = [
+      "http://soundsandwords.tki.org.nz",
+      "http://ssol.tki.org.nz",
+      "http://seonline.tki.org.nz",
+      "http://success-for-boys.tki.org.nz",
+      "http://taihape-area-school.tki.org.nz",
+      "http://www.taxcitizenship.tki.org.nz",
+      "http://tereomaori.tki.org.nz",
+      "http://tetereauraki.tki.org.nz",
+      "http://toolselector.tki.org.nz",
+      "http://wellbeing.tki.org.nz",
+      ]
+
+a.each do |s|
+  puts '!!!!!!!!!!!!!!!!!!!!!!!!!!'
+  puts s
+  puts '!!!!!!!!!!!!!!!!!!!!!!!!!!'
+  crawler = Crawler.new(s)
+  crawler.crawl
+end
