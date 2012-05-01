@@ -17,8 +17,13 @@ class MMS
   def self.find(uri)
     solr = RSolr.connect :url => $options.solr
     response = solr.get 'select', :params => {:q => '*:*', :fq => "{!field f=url}#{uri}"}
-    if response["response"]
-      response["response"]["docs"].first["id"]
+    if response["response"]["numFound"] > 0
+      id = response["response"]["docs"].first["id"]
+      if id =~ /TKI\d+/
+        id
+      else
+        nil
+      end
     else
       nil
     end
