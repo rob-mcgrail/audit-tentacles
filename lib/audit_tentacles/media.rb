@@ -13,7 +13,8 @@ class Media
         $redis.sadd "#{$options.global_prefix}:uris", uri
         $redis.set "#{$options.global_prefix}:#{uri}:sum", info[:sum]
       end
-      info[:sum] # Return the sum.
+      MMS.store_id_for context
+      info[:sum] # Return the sum
     end
   end
 
