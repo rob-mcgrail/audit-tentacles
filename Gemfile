@@ -7,6 +7,7 @@ gem "trollop"
 gem "mechanize"
 gem "highline"
 gem "fastercsv"
+gem "rsolr"
 
 group :test do
   gem "minitest", :platforms => :mri_18
