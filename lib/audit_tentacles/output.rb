@@ -45,8 +45,8 @@ class Output
 
 
   def get_site(uri)
-    uri.gsub!('-', '_')
-    site = /^http:\/\/(\w+(\.\w+)?)\.tki\.org\.nz/.match(uri)
+    norm_uri = uri.gsub('-', '_')
+    site = /^http:\/\/(\w+(\.\w+)?)\.tki\.org\.nz/.match(norm_uri)
     site = site[1] if site
     site = 'portal' if site == 'www'
     site.downcase
