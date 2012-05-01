@@ -18,7 +18,7 @@ class MMS
     solr = RSolr.connect :url => $options.solr
     begin
       response = solr.get 'select', :params => {:q => '*:*', :fq => "{!field f=url}#{uri}"}
-    rescue Errno::ECONNRESET
+    rescue Errno::ECONNRESET, Errno::ETIMEDOUT
       retry
     end
     if response["response"]["numFound"] > 0
@@ -32,5 +32,4 @@ class MMS
       nil
     end
   end
-
 end
