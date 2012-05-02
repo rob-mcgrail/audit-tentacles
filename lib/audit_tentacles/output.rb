@@ -4,18 +4,6 @@ class Output
   end
 
 
-  def hashes_with_sizes
-    FasterCSV.open(@file_path, "w") do |csv|
-      csv << ['Hash', 'Bytes', 'Example location']
-      $redis.smembers("#{$options.global_prefix}:sums").each do |k|
-        size = $redis.get "#{$options.global_prefix}:#{k}:size"
-        location = $redis.spop "#{$options.global_prefix}:#{k}:uris"
-        csv << [k, size, location]
-      end
-    end
-  end
-
-
   def basic
     FasterCSV.open(@file_path, "w") do |csv|
       csv << ['Site', 'Bytes', 'Type', 'Location', 'URI',  'EzPub Location', 'Location\'s MMS ID', 'MD5']
@@ -28,7 +16,9 @@ class Output
           site = get_site(context)
           id = MMS.id_for(context)
           ezp = EzPub.media_node_for(k)
-          csv << [site, size, type, context, k, ezp, id, sum]
+          a = [site, size, type, context, k, ezp, id, sum]
+          puts $term.color(a.to_s, :green)
+          csv << a
         end
       end
     end
