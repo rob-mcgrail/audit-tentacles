@@ -18,7 +18,7 @@ class Output
 
   def basic
     FasterCSV.open(@file_path, "w") do |csv|
-      csv << ['Site', 'Bytes', 'Type', 'Location', 'URI', 'Location\'s MMS ID', 'MD5']
+      csv << ['Site', 'Bytes', 'Type', 'Location', 'URI',  'EzPub Location', 'Location\'s MMS ID', 'MD5']
       $redis.smembers("#{$options.global_prefix}:uris").each do |k|
         sum = $redis.get "#{$options.global_prefix}:#{k}:sum"
         size = $redis.get "#{$options.global_prefix}:#{sum}:size"
@@ -27,7 +27,8 @@ class Output
         contexts.each do |context|
           site = get_site(context)
           id = MMS.id_for(context)
-          csv << [site, size, type, context, k, id, sum]
+          ezp = EzPub.media_node_for(uri)
+          csv << [site, size, type, context, k, ezp, id, sum]
         end
       end
     end
