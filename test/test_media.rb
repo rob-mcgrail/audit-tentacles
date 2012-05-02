@@ -11,6 +11,8 @@ class TestMedia < MiniTest::Unit::TestCase
     stub_request(:get, "http://example.com/media/thing.jpg").to_return({:status => 200, :body => img})
     img = File.open('./test/mocks/cat2.jpg')
     stub_request(:get, "http://example.com/media/another.jpg").to_return({:status => 200, :body => img})
+    solr_null = File.open('./test/mocks/solr_null')
+    stub_request(:any, /#{Regexp.escape($options.solr)}\/select/).to_return({:status => 200, :body => solr_null})
   end
 
 
