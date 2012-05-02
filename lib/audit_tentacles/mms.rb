@@ -1,15 +1,15 @@
 class MMS
   def self.id_for(uri)
-    id = nil#$redis.get "#{$options.global_prefix}:context:#{uri}:id"
+    id = $redis.get "#{$options.global_prefix}:context:#{uri}:id"
     unless id
-      id = self.find(uri)
+      id = self.find(uri) || 'Unknown'
       $redis.set "#{$options.global_prefix}:context:#{uri}:id", id
     end
     id
   end
 
 
- class << self
+  class << self
     alias_method :store_id_for, :id_for
   end
 
