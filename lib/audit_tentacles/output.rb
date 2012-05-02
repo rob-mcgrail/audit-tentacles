@@ -27,7 +27,7 @@ class Output
         contexts.each do |context|
           site = get_site(context)
           id = MMS.id_for(context)
-          ezp = EzPub.media_node_for(uri)
+          ezp = EzPub.media_node_for(k)
           csv << [site, size, type, context, k, ezp, id, sum]
         end
       end
