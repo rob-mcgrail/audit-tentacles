@@ -6,7 +6,6 @@ class Crawler
     @site.gsub!(/\/$/, '')
   end
 
-
   def crawl
     opts = {
       :discard_page_bodies => true,

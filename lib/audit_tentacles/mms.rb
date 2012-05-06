@@ -2,7 +2,7 @@ class MMS
   def self.id_for(uri)
     id = $redis.get "#{$options.global_prefix}:context:#{uri}:id"
     unless id
-      id = self.find(uri) || 'Unknown'
+      id = self.find(uri) || nil
       $redis.set "#{$options.global_prefix}:context:#{uri}:id", id
     end
     id
