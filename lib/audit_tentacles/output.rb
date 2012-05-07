@@ -41,24 +41,31 @@ class Output
 
   def blacklistable_uniques
     FasterCSV.open(@file_path, "w") do |csv|
+
       csv << ['MD5', 'Bytes', 'Type', 'Example URI', 'URIs',  'Example EzPub Location', 'Example context page', 'Context pages', 'Example context-page MMS record']
+
       $redis.smembers("#{$options.global_prefix}:sums").each do |k|
         uri = $redis.srandmember "#{$options.global_prefix}:#{k}:uris"
         uri_count = $redis.scard "#{$options.global_prefix}:#{k}:uris"
         type = get_type(uri)
+
         unless yield type
           ezp = EzPub.media_node_for(uri)
+
           unless $redis.sismember "#{$options.global_prefix}:ezps", ezp
             $redis.sadd "#{$options.global_prefix}:ezps", ezp
+
             size = $redis.get "#{$options.global_prefix}:#{k}:size"
             context = $redis.srandmember "#{$options.global_prefix}:#{k}:contexts"
             context_count = $redis.scard "#{$options.global_prefix}:#{k}:contexts"
             contexts = $redis.smembers "#{$options.global_prefix}:#{k}:contexts"
             mms_id = nil
+
             contexts.each do |context|
               id = MMS.id_for(context)
               mms_id = id if id
             end
+
             a = [k, size, type, uri, uri_count, ezp, context, context_count, mms_id]
             puts $term.color(a.to_s, :green)
             csv << a

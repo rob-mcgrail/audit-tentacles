@@ -4,7 +4,10 @@ require './lib/audit_tentacles'
 #o = Output.new('audit.csv')
 #o.basic
 
-o = Output.new('non-image-uniques.csv')
+o = Output.new('meaningful-uniques.csv')
+o.meaningful_uniques
+
+o = Output.new('cruft-uniques.csv')
 o.meaningful_uniques
 
 puts "Files are in your home directory..."
