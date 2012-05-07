@@ -34,6 +34,6 @@ class EzPub
 
   def self.domain_match(uri)
     domain_match = /^http:\/\/([^\/]+)/.match(uri)
-    domain_match[1]
+    domain_match[1] if domain_match
   end
 end

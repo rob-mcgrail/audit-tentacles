@@ -25,16 +25,30 @@ class Output
   end
 
 
-  def non_image_uniques
+  def meaningful_uniques
+    blacklistable_uniques do |type|
+       ['jpg', 'png', 'gif', 'mp3'].include? type
+    end
+  end
+
+
+  def cruft_uniques
+    blacklistable_uniques do |type|
+       !['jpg', 'png', 'gif', 'mp3'].include? type
+    end
+  end
+
+
+  def blacklistable_uniques
     FasterCSV.open(@file_path, "w") do |csv|
       csv << ['MD5', 'Bytes', 'Type', 'Example URI', 'URIs',  'Example EzPub Location', 'Example context page', 'Context pages', 'Example context-page MMS record']
       $redis.smembers("#{$options.global_prefix}:sums").each do |k|
         uri = $redis.srandmember "#{$options.global_prefix}:#{k}:uris"
         uri_count = $redis.scard "#{$options.global_prefix}:#{k}:uris"
         type = get_type(uri)
-        unless ['jpg', 'png', 'gif'].include? type
+        unless yield type
           ezp = EzPub.media_node_for(uri)
-          unless $redis.smember "#{$options.global_prefix}:ezps", ezp
+          unless $redis.sismember "#{$options.global_prefix}:ezps", ezp
             $redis.sadd "#{$options.global_prefix}:ezps", ezp
             size = $redis.get "#{$options.global_prefix}:#{k}:size"
             context = $redis.srandmember "#{$options.global_prefix}:#{k}:contexts"
@@ -46,6 +60,7 @@ class Output
               mms_id = id if id
             end
             a = [k, size, type, uri, uri_count, ezp, context, context_count, mms_id]
+            puts $term.color(a.to_s, :green)
             csv << a
           end
         end
@@ -70,5 +85,12 @@ class Output
     site = site[1] if site
     site = 'portal' if site == 'www'
     site.downcase
+  end
+
+  def tidyup
+    $redis.smembers("#{$options.global_prefix}:uris").each do |k|
+      sum = $redis.get("#{$options.global_prefix}:#{k}:sum")
+      $redis.sadd "#{$options.global_prefix}:#{sum}:uris", k
+    end
   end
 end
