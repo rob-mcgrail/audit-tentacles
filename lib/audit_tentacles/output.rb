@@ -49,7 +49,9 @@ class Output
         uri_count = $redis.scard "#{$options.global_prefix}:#{k}:uris"
         type = get_type(uri)
 
-        unless yield type
+        permitable = yield type
+
+        unless permitable
           ezp = EzPub.media_node_for(uri)
 
           unless $redis.sismember "#{$options.global_prefix}:ezps", ezp
