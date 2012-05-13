@@ -8,6 +8,6 @@ o = Output.new('audit-meaningful-uniques.csv')
 o.meaningful_uniques
 
 o = Output.new('audit-cruft-uniques.csv')
-o.meaningful_uniques
+o.cruft_uniques
 
 puts "Files are in your home directory..."
