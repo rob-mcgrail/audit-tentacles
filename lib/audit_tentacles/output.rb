@@ -46,8 +46,9 @@ class Output
 
   def blacklistable_uniques
     FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Site', 'EzPub Location', 'Sums', 'Bytes', 'Type', 'Example URI', 'URIs', 'Example context page', 'Context pages', 'Example context-page MMS record']
 
-      csv << ['MD5', 'Bytes', 'Type', 'Example URI', 'URIs',  'Example EzPub Location', 'Example context page', 'Context pages', 'Example context-page MMS record']
+      $redis.del "#{$options.global_prefix}:ezps"
 
       $redis.smembers("#{$options.global_prefix}:sums").each do |k|
         uri = $redis.srandmember "#{$options.global_prefix}:#{k}:uris"
@@ -58,6 +59,8 @@ class Output
 
         unless permitable
           ezp = EzPub.media_node_for(uri)
+
+          $redis.sadd "#{$options.global_prefix}:#{ezp}:sums", k
 
           unless $redis.sismember "#{$options.global_prefix}:ezps", ezp
             $redis.sadd "#{$options.global_prefix}:ezps", ezp
@@ -73,7 +76,10 @@ class Output
               mms_id = id if id
             end
 
-            a = [k, size, type, uri, uri_count, ezp, context, context_count, mms_id]
+            site = get_site(context)
+            sums = $redis.scard "#{$options.global_prefix}:#{ezp}:sums"
+
+            a = [site, ezp, sums, size, type, uri, uri_count, context, context_count, mms_id]
 
             puts $term.color(a.to_s, :green)
 
