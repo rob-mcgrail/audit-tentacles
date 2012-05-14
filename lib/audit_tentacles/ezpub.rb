@@ -1,6 +1,6 @@
 class EzPub
   def self.media_node_for(uri)
-    ezp = $redis.get "#{$options.global_prefix}:uri:#{uri}:ezp"
+    ezp = nil#$redis.get "#{$options.global_prefix}:uri:#{uri}:ezp"
     unless ezp
       ezp = self.from_storage(uri) || self.from_content(uri) || 'Unkown'
       $redis.set "#{$options.global_prefix}:uri:#{uri}:ezp", ezp
@@ -11,7 +11,7 @@ class EzPub
 
   def self.from_storage(uri)
     domain = 'http://admin.' + domain_match(uri)
-    path_match = /\/var\/[\w|-]+\/storage\/[\w|-]+(\/media\/([\w|\d|-]+\/)+)/.match(uri)
+    path_match = /\/var\/[\w|-]+\/storage\/[\w|-]+(\/(media|video-gallery)\/([\w|\d|\.|\_|-]+\/)+)/.match(uri)
     if path_match
       domain + path_match[1].sub(/\/[^\/]+\/$/, '')
     else

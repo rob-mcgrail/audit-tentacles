@@ -46,7 +46,7 @@ class Output
 
   def blacklistable_uniques
     FasterCSV.open(@file_path, "w") do |csv|
-      csv << ['Site', 'EzPub Location', 'Sums', 'Bytes', 'Type', 'Example URI', 'URIs', 'Example context page', 'Context pages', 'Example context-page MMS record']
+      csv << ['Site', 'Type', 'EzPub Location', 'Sums', 'Bytes', 'Example URI', 'URIs', 'Example context page', 'Context pages', 'Example context-page MMS record']
 
       $redis.del "#{$options.global_prefix}:ezps"
 
@@ -55,15 +55,16 @@ class Output
         uri_count = $redis.scard "#{$options.global_prefix}:#{k}:uris"
         type = get_type(uri)
 
-        permitable = yield type
+        blacklist = yield type
 
-        unless permitable
+        unless blacklist
           ezp = EzPub.media_node_for(uri)
 
-          $redis.sadd "#{$options.global_prefix}:#{ezp}:sums", k
+          $redis.sadd "#{$options.global_prefix}:ezps", ezp
 
           unless $redis.sismember "#{$options.global_prefix}:ezps", ezp
-            $redis.sadd "#{$options.global_prefix}:ezps", ezp
+
+            $redis.sadd "#{$options.global_prefix}:#{ezp}:sums", k
 
             size = $redis.get "#{$options.global_prefix}:#{k}:size"
             context = $redis.srandmember "#{$options.global_prefix}:#{k}:contexts"
@@ -79,7 +80,7 @@ class Output
             site = get_site(context)
             sums = $redis.scard "#{$options.global_prefix}:#{ezp}:sums"
 
-            a = [site, ezp, sums, size, type, uri, uri_count, context, context_count, mms_id]
+            a = [site, type, ezp, sums, size, uri, uri_count, context, context_count, mms_id]
 
             puts $term.color(a.to_s, :green)
 
@@ -108,6 +109,7 @@ class Output
     site = 'portal' if site == 'www'
     site.downcase
   end
+
 
   def tidyup
     $redis.smembers("#{$options.global_prefix}:uris").each do |k|
