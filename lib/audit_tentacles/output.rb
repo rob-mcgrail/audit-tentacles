@@ -4,6 +4,52 @@ class Output
   end
 
 
+  def sizes_for_media_by_uri
+    FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Type', 'Bytes']
+      counts = {}
+      $redis.smembers("#{$options.global_prefix}:uris").each do |k|
+        sum = $redis.get "#{$options.global_prefix}:#{k}:sum"
+        size = $redis.get "#{$options.global_prefix}:#{sum}:size"
+        type = get_type(k)
+
+        if counts[type]
+          counts[type] += size.to_i
+        else
+          counts[type] = 0
+          counts[type] += size.to_i
+        end
+      end
+      counts.each do |k,v|
+        csv << [k, v]
+      end
+    end
+  end
+
+
+  def sizes_for_media_by_ezp
+    FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Type', 'Bytes']
+      counts = {}
+      $redis.smembers("#{$options.global_prefix}:ezps").each do |k|
+        sum = $redis.get "#{$options.global_prefix}:#{k}:sum"
+        size = $redis.get "#{$options.global_prefix}:#{sum}:size"
+        type = get_type(k)
+
+        if counts[type]
+          counts[type] += size.to_i
+        else
+          counts[type] = 0
+          counts[type] += size.to_i
+        end
+      end
+      counts.each do |k,v|
+        csv << [k, v]
+      end
+    end
+  end
+
+
   def basic
     FasterCSV.open(@file_path, "w") do |csv|
       csv << ['Site', 'Bytes', 'Type', 'Location', 'URI',  'EzPub Location', 'Location\'s MMS ID', 'MD5']
@@ -25,6 +71,63 @@ class Output
 
           csv << a
         end
+      end
+    end
+  end
+
+
+  def basic_with_single_contexts
+    FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Site', 'Bytes', 'Type', 'Example Context', 'URI',  'Example EzPub Location', 'Example Context MMS ID', 'MD5']
+
+      $redis.smembers("#{$options.global_prefix}:uris").each do |k|
+        sum = $redis.get "#{$options.global_prefix}:#{k}:sum"
+        size = $redis.get "#{$options.global_prefix}:#{sum}:size"
+        type = get_type(k)
+
+        contexts = $redis.smembers "#{$options.global_prefix}:#{sum}:contexts"
+
+        example_context = nil
+        ezp = nil
+        mms_id = nil
+
+        contexts.each do |context|
+          mms_id = MMS.id_for(context) if MMS.id_for(context)
+          ezp = EzPub.media_node_for(k) if EzPub.media_node_for(k)
+          example_context = context
+        end
+
+        site = get_site(contexts.first)
+
+        a = [site, size, type, example_context, k, ezp, mms_id, sum]
+
+        puts $term.color(a.to_s, :green)
+
+        csv << a
+      end
+    end
+  end
+
+
+  def crosssite
+    FasterCSV.open(@file_path, "w") do |csv|
+      csv << ['Sum', 'Contexts', 'Sites', 'URI', 'Context example']
+      $redis.smembers("#{$options.global_prefix}:sums").each do |k|
+        contexts = $redis.smembers "#{$options.global_prefix}:#{k}:contexts"
+
+        contexts.each do |c|
+          $redis.sadd "#{$options.global_prefix}:#{k}:sites", get_site(c)
+        end
+
+        sites = $redis.scard "#{$options.global_prefix}:#{k}:sites"
+
+        uris = $redis.smembers "#{$options.global_prefix}:#{k}:uris"
+
+        uri = uris[0]
+
+        context = contexts[0]
+
+        csv << [k, contexts.length, sites, uri, context]
       end
     end
   end

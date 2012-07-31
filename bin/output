@@ -1,13 +1,20 @@
 require 'rubygems'
 require './lib/audit_tentacles'
 
-o = Output.new('audit.csv')
-o.basic
 
-o = Output.new('audit-meaningful-uniques.csv')
-o.meaningful_uniques
+#o = Output.new('by-uri.csv')
+#o.basic_with_single_contexts
 
-o = Output.new('audit-cruft-uniques.csv')
-o.cruft_uniques
+#o = Output.new('audit.csv')
+#o.basic
+
+#o = Output.new('audit-meaningful-uniques.csv')
+#o.meaningful_uniques
+
+#o = Output.new('audit-cruft-uniques.csv')
+#o.cruft_uniques
+
+o = Output.new('crosssite.csv')
+o.crosssite
 
 puts "Files are in your home directory..."

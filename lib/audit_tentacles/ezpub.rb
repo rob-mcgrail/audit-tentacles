@@ -1,6 +1,6 @@
 class EzPub
   def self.media_node_for(uri)
-    ezp = nil#$redis.get "#{$options.global_prefix}:uri:#{uri}:ezp"
+    ezp = $redis.get "#{$options.global_prefix}:uri:#{uri}:ezp"
     unless ezp
       ezp = self.from_storage(uri) || self.from_content(uri) || 'Unkown'
       $redis.set "#{$options.global_prefix}:uri:#{uri}:ezp", ezp
@@ -19,6 +19,7 @@ class EzPub
     end
   end
 
+  # add in other pattern?
 
   def self.from_content(uri)
     domain = domain_match(uri)

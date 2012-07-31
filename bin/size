@@ -1,0 +1,5 @@
+require 'rubygems'
+require './lib/audit_tentacles'
+
+o = Output.new('sizes.csv')
+o.sizes_for_media_by_uri
