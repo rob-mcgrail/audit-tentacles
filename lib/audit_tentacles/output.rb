@@ -111,7 +111,7 @@ class Output
 
   def crosssite
     FasterCSV.open(@file_path, "w") do |csv|
-      csv << ['Sum', 'Contexts', 'Sites', 'URI', 'Context example']
+      csv << ['Sum', 'Contexts', 'Sites', 'Type', 'URI', 'Context example']
       $redis.smembers("#{$options.global_prefix}:sums").each do |k|
         contexts = $redis.smembers "#{$options.global_prefix}:#{k}:contexts"
 
@@ -125,9 +125,11 @@ class Output
 
         uri = uris[0]
 
+        type = get_type(uri)
+
         context = contexts[0]
 
-        csv << [k, contexts.length, sites, uri, context]
+        csv << [k, contexts.length, sites, type, uri, context]
       end
     end
   end
